@@ -46,7 +46,7 @@ export function PixPayment({ fullName, cpf, phone, numbers, onConfirm }: PixPaym
       }
     };
     createPixCob();
-  }, [fullName, cpf, phone, numbers, request]);
+  }, []);
 
   useEffect(() => {
     if (transactionId) {
