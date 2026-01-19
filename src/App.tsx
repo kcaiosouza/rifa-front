@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
-import Draw from "@/pages/draw";
+import Draw from "@/pages/draw"; // Habilitar apenas no dia do sorteio
 import NotFound from "@/pages/not-found";
 
 function Router() {

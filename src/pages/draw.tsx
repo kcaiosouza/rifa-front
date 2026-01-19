@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { Trophy, Play, RefreshCw, ArrowDown, Sparkles } from "lucide-react";
+
+import Confetti from 'react-confetti-boom';
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +21,7 @@ interface PurchasedNumber {
   client: Client;
 }
 
-const DURATION = 60; // 60 seconds total
+const DURATION = 3; // 60 seconds total
 const ITEM_WIDTH = 80; // Each number cell is 80px
 
 export default function Draw() {
@@ -185,8 +188,10 @@ export default function Draw() {
                   <Trophy className="w-16 h-16 text-accent absolute -top-8 -left-8 -rotate-12 drop-shadow-lg" />
                   <p className="text-sm font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">Ganhador(a)!</p>
                   <h2 className="text-5xl font-display font-bold text-foreground mb-2">{winner?.client.name}</h2>
+                  <p className="text-xl font-display font-bold italic text-primary">CPF {winner?.client.cpf}</p>
                   <p className="text-2xl font-display font-bold text-secondary">Número {winner?.number}</p>
                 </div>
+                <Confetti mode="boom" particleCount={70} colors={['#9eccfa', '#f589ad']} />
                 <Button 
                   variant="outline" 
                   onClick={reset}
