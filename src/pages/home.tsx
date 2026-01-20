@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Filter, Shuffle, ShoppingCart, Calendar, Music, Sparkles, Check, ChevronLeft, ChevronRight, Trash } from "lucide-react";
+import { cpf } from "cpf-cnpj-validator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -65,7 +66,9 @@ export default function Home() {
   // Form states
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [cpfValue, setCpfValue] = useState("");
+  
+  const cpfValid = cpfValue.trim() ? cpf.isValid(cpfValue) : null;
 
   // Filter Logic
   const filteredNumbers = useMemo(() => {
@@ -116,6 +119,8 @@ export default function Home() {
   };
 
   const totalPrice = selectedNumbers.length * TICKET_PRICE;
+
+  const isFormValid = name.trim() && phone.trim() && cpfValue.trim() && cpfValid === true;
 
   return (
     <>
@@ -390,20 +395,32 @@ export default function Home() {
                                   onChange={(e) => setPhone(e.target.value)}
                                   className="h-12 rounded-xl bg-slate-50 border-slate-200" 
                                 />
-                                <Input 
-                                  placeholder="Seu CPF" 
-                                  value={cpf}
-                                  onChange={(e) => setCpf(e.target.value)}
-                                  className="h-12 rounded-xl bg-slate-50 border-slate-200" 
-                                />
+                                <div className="space-y-1">
+                                  <Input 
+                                    placeholder="Seu CPF" 
+                                    value={cpfValue}
+                                    onChange={(e) => setCpfValue(e.target.value)}
+                                    className={`h-12 rounded-xl bg-slate-50 border-slate-200 ${
+                                      cpfValid === true ? 'border-green-500' : 
+                                      cpfValid === false ? 'border-red-500' : ''
+                                    }`}
+                                  />
+                                  {cpfValid !== null && (
+                                    <p className={`text-sm px-2 ${
+                                      cpfValid ? 'text-green-600' : 'text-red-600'
+                                    }`}>
+                                      {cpfValid ? '✓ CPF válido' : '✗ CPF inválido'}
+                                    </p>
+                                  )}
+                                </div>
                                 <div className="flex justify-between items-center px-4 py-2">
                                   <span className="text-lg font-bold text-muted-foreground">Total</span>
                                   <span className="text-3xl font-display font-bold text-primary">R$ {totalPrice.toFixed(2)}</span>
                                 </div>
                                 <Button 
                                   onClick={() => setCheckoutStep("payment")}
-                                  disabled={!name || !phone || !cpf}
-                                  className="w-full h-12 rounded-xl text-lg font-bold bg-green-500 hover:bg-green-600 text-white"
+                                  disabled={!isFormValid}
+                                  className="w-full h-12 rounded-xl text-lg font-bold bg-green-500 hover:bg-green-600 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
                                 >
                                   Pagar com PIX
                                 </Button>
@@ -415,7 +432,7 @@ export default function Home() {
                             <PixPayment 
                               numbers={selectedNumbers}
                               fullName={name}
-                              cpf={cpf}
+                              cpf={cpfValue}
                               phone={phone}
                               onConfirm={() => setCheckoutStep("success")}
                               onError={() => {setCheckoutStep("info"); setIsCheckoutOpen(false);}}
