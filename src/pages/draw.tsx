@@ -25,6 +25,24 @@ const DURATION = 3; // 60 seconds total
 const ITEM_WIDTH = 80; // Each number cell is 80px
 
 export default function Draw() {
+  function cryptoRandomInt(maxExclusive: number) {
+  if (!Number.isInteger(maxExclusive) || maxExclusive <= 0) {
+    throw new Error("maxExclusive must be a positive integer");
+  }
+
+  const u32 = new Uint32Array(1);
+  const max = 0x100000000; // 2^32
+  const limit = Math.floor(max / maxExclusive) * maxExclusive;
+
+  let x = 0;
+  do {
+    globalThis.crypto.getRandomValues(u32);
+    x = u32[0];
+  } while (x >= limit);
+
+  return x % maxExclusive;
+}
+
   const { request } = useApi();
   useEffect(() => {
     document.title = "Sorteio | Rifa do Bebê";
@@ -64,7 +82,7 @@ export default function Draw() {
     setTimeLeft(DURATION);
 
     // Pick a random winner from the actual purchased numbers
-    const finalWinner = purchasedNumbers[Math.floor(Math.random() * purchasedNumbers.length)];
+    const finalWinner = purchasedNumbers[cryptoRandomInt(purchasedNumbers.length)];
     
     // Find a position for this winner near the end of our strip
     // We target an index far enough to ensure enough scrolling
