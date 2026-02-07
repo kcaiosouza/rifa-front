@@ -56,7 +56,7 @@ export default function Home() {
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
   const [takenNumbers, setTakenNumbers] = useState<Set<number>>(new Set());
   const [loadingNumbers, setLoadingNumbers] = useState(true);
-  const [showAvailableOnly, setShowAvailableOnly] = useState(false);
+  const [showAvailableOnly, setShowAvailableOnly] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(50);
   const [randomQuantity, setRandomQuantity] = useState(1);
