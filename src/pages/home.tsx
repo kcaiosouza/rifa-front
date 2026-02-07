@@ -77,7 +77,7 @@ export default function Home() {
       numbers = numbers.filter(n => !takenNumbers.has(n));
     }
     return numbers;
-  }, [showAvailableOnly]);
+  }, [showAvailableOnly, takenNumbers]);
 
   // Pagination Logic
   const totalPages = Math.ceil(filteredNumbers.length / itemsPerPage);
